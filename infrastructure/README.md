@@ -1,4 +1,4 @@
-# Infrastructure Module - Core Data & Storage
+# Infrastructure Module 1 - Core Data & Storage
 
 This module contains the foundational data and storage components for the Real-Time Document Intelligence & Compliance Engine.
 
