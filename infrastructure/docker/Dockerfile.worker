@@ -1,0 +1,56 @@
+# Dockerfile for Celery Workers and Background Tasks
+# Real-Time Document Intelligence & Compliance Engine
+# Version: 1.0
+# Date: 2026-02-03
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    libmagic1 \
+    poppler-utils \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-fra \
+    tesseract-ocr-deu \
+    tesseract-ocr-spa \
+    libreoffice \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional ML/AI packages
+RUN pip install --no-cache-dir \
+    torch torchvision --index-url https://download.pytorch.org/whl/cpu \
+    transformers[torch] \
+    sentence-transformers \
+    spacy \
+    && python -m spacy download en_core_web_sm
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /tmp/docintell /app/logs
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV TRANSFORMERS_CACHE=/tmp/docintell/transformers_cache
+ENV HF_HOME=/tmp/docintell/huggingface_cache
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import celery; print('Celery worker healthy')"
+
+# Default command (overridden in docker-compose)
+CMD ["celery", "-A", "document_processing.celery", "worker", "--loglevel=info"]
