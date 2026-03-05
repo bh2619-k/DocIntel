@@ -172,7 +172,7 @@ graph TB
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/devwithmohit/Real-Time-Document-Intelligence-Compliance-Engine.git
+git clone https://github.com/bh2619-k/DocIntel.git
 cd Real-Time-Document-Intelligence-Compliance-Engine
 ```
 
@@ -217,7 +217,7 @@ open http://localhost:8000/docs
 
 ```bash
 # Clone repository
-git clone https://github.com/devwithmohit/Real-Time-Document-Intelligence-Compliance-Engine.git
+git clone https://github.com/bh2619-k/DocIntel.git
 cd Real-Time-Document-Intelligence-Compliance-Engine
 
 # Install in development mode
